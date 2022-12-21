@@ -67,6 +67,12 @@ const redisClient = new Redis('redis://redis:6379');
  to -> const redisClient = new Redis('redis://localhost:6379');
 ```
 
+run prisma migration
+
+```
+yarn prisma migrate dev // yarn docker:migrate
+```
+
 Run the app
 
 ```
