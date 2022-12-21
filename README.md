@@ -10,6 +10,7 @@ and all basic CRUD operations,
 ### Optional Requirements:
 
 All finances endpoints should only be accessible for authenticated users
+
 Create a docker container for the entire application.
 
 ## Swagger file
