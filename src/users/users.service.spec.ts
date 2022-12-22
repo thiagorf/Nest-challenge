@@ -11,13 +11,30 @@ const oneUser = {
   password: '1234',
 };
 
+const finances = [
+  {
+    id: 1,
+    type: 'income',
+    description: 'Job',
+    value: 2000,
+  },
+  {
+    id: 2,
+    type: 'expense',
+    description: 'food',
+    value: 400,
+  },
+];
+
+const userWithFinances = { ...oneUser, finances };
+
 const userArray = [oneUser];
 
 const passwordHash = {
   hashPassword: jest.fn().mockResolvedValue('hashedPassword'),
 };
 
-const prisma = {
+const prismaDB = {
   user: {
     findMany: jest.fn().mockResolvedValue(userArray),
     findUnique: jest.fn().mockResolvedValue(oneUser),
@@ -32,13 +49,14 @@ const prisma = {
 describe('UsersService', () => {
   let service: UsersService;
   let passwordService: PasswordHashService;
+  let prisma: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
         AuthService,
-        { provide: PrismaService, useValue: prisma },
+        { provide: PrismaService, useValue: prismaDB },
         {
           provide: PasswordHashService,
           useValue: passwordHash,
@@ -48,6 +66,7 @@ describe('UsersService', () => {
 
     service = module.get<UsersService>(UsersService);
     passwordService = module.get<PasswordHashService>(PasswordHashService);
+    prisma = module.get<PrismaService>(PrismaService);
   });
 
   it('should be defined', () => {
@@ -75,6 +94,17 @@ describe('UsersService', () => {
       const user = await service.create(oneUser);
 
       expect(user).not.toHaveProperty('password');
+    });
+  });
+
+  describe('get balance', () => {
+    it('should be able to return user finances', async () => {
+      jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(userWithFinances);
+
+      const userBalance = await service.getBalance(userWithFinances.email);
+
+      expect(userBalance).toHaveProperty('total_balance');
+      expect(userBalance.total_balance).toEqual(1600);
     });
   });
 });
