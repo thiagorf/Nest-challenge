@@ -1,9 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PasswordHashService } from 'src/provider/password-hash/password-hash.service';
 import { PrismaService } from 'src/provider/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -19,6 +18,19 @@ export class UsersService {
   };
 
   async create(createUserDto: CreateUserDto) {
+    const emailIsAvailable = await this.prisma.user.findUnique({
+      where: {
+        email: createUserDto.email,
+      },
+    });
+
+    if (emailIsAvailable) {
+      throw new HttpException(
+        'Email has already been in use.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const hashedPassword = await this.passwordHash.hashPassword(
       createUserDto.password,
     );
@@ -45,25 +57,40 @@ export class UsersService {
   }
 
   async findOne(id: number) {
-    const userOrThrow = await this.prisma.user.findUniqueOrThrow({
+    const user = await this.prisma.user.findUnique({
       where: {
         id,
       },
       select: this.userSelect,
     });
 
-    return userOrThrow;
+    if (!user) {
+      throw new HttpException(
+        'Invalid or inexisting user',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return user;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    const userOrThrow = await this.prisma.user.findUniqueOrThrow({
+    const user = await this.prisma.user.findUnique({
       where: {
         id,
       },
     });
+
+    if (!user) {
+      throw new HttpException(
+        'Invalid or inexisting user',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const updatedUser = await this.prisma.user.update({
       where: {
-        id: userOrThrow.id,
+        id: user.id,
       },
       data: updateUserDto,
       select: this.userSelect,

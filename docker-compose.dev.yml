@@ -1,0 +1,16 @@
+services:
+  postgres:
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nest
+
+  api:
+    build:
+      target: dev
+    ports:
+      - 8000:8000
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/nest?schema=public
