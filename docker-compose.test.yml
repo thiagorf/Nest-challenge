@@ -1,0 +1,14 @@
+services:
+  postgres:
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: testdb
+
+  api:
+    build:
+      target: dev
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/testdb?schema=public
