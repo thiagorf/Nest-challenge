@@ -15,7 +15,7 @@ Create a docker container for the entire application.
 
 ## Swagger file
 
-Wip...
+check localhost:8000/api
 
 ## Instructions
 
@@ -32,21 +32,15 @@ SESSION_SECRET=
 
 ### With Docker:
 
-Build the docker container and the respectively image
-
-> only on the first installation, in the next ones you can use yarn docker
+Build the docker container
 
 ```
-yarn docker:build
-```
-
-in another terminal run the prisma migration
-
-```
-yarn docker:migrate
+yarn docker:dev
 ```
 
 you can test the app on localhost:8000 now
+
+> Nest dont support pre-post script hooks (as far i know), so after you are done with `yarn docker:dev`, exit the process (ctrl + c) and run `yarn container:stop`
 
 <br>
 
@@ -60,14 +54,6 @@ Install dependencies
 yarn or npm install
 ```
 
-Change this line on main.ts (I will fix latter)
-
-```
-const redisClient = new Redis('redis://redis:6379');
-
- to -> const redisClient = new Redis('redis://localhost:6379');
-```
-
 run prisma migration
 
 ```
@@ -79,3 +65,11 @@ Run the app
 ```
 yarn start:dev
 ```
+
+## Test (WIP)
+
+My test methodology uses unit tests in core business rules and mocking the database and other dependencies calls, integration tests on almost everything, and the same goes for end-to-end tests.
+
+unit test: `yarn test:watch`
+
+integration test: `yarn test:int`
