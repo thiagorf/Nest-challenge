@@ -44,26 +44,22 @@ export class FinancesService {
 
     const where = {
       user_id: user.id,
+      ...(start_at &&
+        ends_at && {
+          created_at: {
+            lte: ends_at,
+            gte: start_at,
+          },
+        }),
     };
 
     const [finances, totalFinances] = await this.prisma.$transaction([
       this.prisma.finance.findMany({
         skip: (+page_number - 1) * +limit,
         take: +limit,
-        where: {
-          ...where,
-          ...(start_at && {
-            created_at: {
-              gte: start_at,
-            },
-          }),
-          ...(ends_at && {
-            created_at: {
-              lte: ends_at,
-            },
-          }),
-        },
+        where,
       }),
+      // add date filter
       this.prisma.finance.count({ where }),
     ]);
 
