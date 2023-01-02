@@ -13,10 +13,6 @@ All finances endpoints should only be accessible for authenticated users
 
 Create a docker container for the entire application.
 
-## Swagger file
-
-check localhost:8000/api
-
 ## Instructions
 
 Change .example.env to .env and fill the variables
@@ -65,6 +61,9 @@ Run the app
 ```
 yarn start:dev
 ```
+## Swagger file
+
+check localhost:8000/api
 
 ## Test (WIP)
 
