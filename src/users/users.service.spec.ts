@@ -37,7 +37,7 @@ const passwordHash = {
 const prismaDB = {
   user: {
     findMany: jest.fn().mockResolvedValue(userArray),
-    findUnique: jest.fn().mockResolvedValue(oneUser),
+    findUnique: jest.fn().mockResolvedValue(null),
     findFirst: jest.fn().mockResolvedValue(oneUser),
     create: jest.fn().mockReturnValue(oneUser),
     save: jest.fn(),
@@ -79,6 +79,13 @@ describe('UsersService', () => {
 
       expect(user).toHaveProperty('id');
       expect(user.id).toEqual(oneUser.id);
+    });
+
+    it('should not be able to create an user with the already used email', () => {
+      jest.spyOn(prisma.user, 'findUnique').mockResolvedValueOnce(oneUser);
+      expect(async () => {
+        await service.create(oneUser);
+      }).rejects.toThrow('Email has already been in use.');
     });
 
     it('should hash the user password', async () => {
