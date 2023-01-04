@@ -100,15 +100,22 @@ export class UsersService {
   }
 
   async remove(id: number) {
-    const userOrThrow = await this.prisma.user.findUniqueOrThrow({
+    const user = await this.prisma.user.findUnique({
       where: {
         id,
       },
     });
 
+    if (!user) {
+      throw new HttpException(
+        'Invalid or inexisting user',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     await this.prisma.user.delete({
       where: {
-        id: userOrThrow.id,
+        id: user.id,
       },
     });
 
