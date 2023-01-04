@@ -61,6 +61,7 @@ Run the app
 ```
 yarn start:dev
 ```
+
 ## Swagger file
 
 check localhost:8000/api
@@ -72,3 +73,13 @@ My test methodology uses unit tests in core business rules and mocking the datab
 unit test: `yarn test:watch`
 
 integration test: `yarn test:int`
+
+## Test Coverage
+
+> needs Docker
+
+run `yarn spec:cov`
+
+just missing the end-to-end tests to get the coverage of the funcs
+
+![coverage](./docs/coverage.png)
