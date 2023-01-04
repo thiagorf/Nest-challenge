@@ -31,7 +31,7 @@
     "test:int": "dotenv -e .env.test -- jest -i --no-cache --watch --config jest-int.json",
     "posttest:int": "yarn container:stop",
     "preint:cov": "yarn db:restart && dotenv -e .env.test -- prisma migrate reset --force",
-    "int:cov": "dotenv -e .env.test -- jest -i --no-cache --coverage --config jest-cov.json",
+    "spec:cov": "dotenv -e .env.test -- jest -i --no-cache --coverage --config jest-cov.json",
     "postint:cov": "yarn container:stop",
     "docker:dev": "yarn compose:dev && yarn prisma migrate deploy && yarn nest start --watch",
     "postdocker:dev": "yarn container:stop"
