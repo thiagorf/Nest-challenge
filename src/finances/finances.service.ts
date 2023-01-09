@@ -5,6 +5,7 @@ import { UsersService } from 'src/users/users.service';
 import { CreateFinanceDto } from './dto/create-finance.dto';
 import { UpdateFinanceDto } from './dto/update-finance.dto';
 import { FilterQuery } from './finances.query';
+import { FINANCE_ERRORS } from './finances.constants';
 
 @Injectable()
 export class FinancesService {
@@ -24,7 +25,10 @@ export class FinancesService {
       createFinanceDto.type === 'expense' &&
       user.total_balance - createFinanceDto.value < 0
     ) {
-      throw new HttpException('Insufficient funds', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        FINANCE_ERRORS.FUNDS_EXCEPTION,
+        HttpStatus.BAD_REQUEST,
+      );
     }
     const finance = await this.prisma.finance.create({
       data: {
@@ -86,14 +90,14 @@ export class FinancesService {
 
     if (!finance) {
       throw new HttpException(
-        'Invalid or inexisting finance',
+        FINANCE_ERRORS.INVALID_EXCEPTION,
         HttpStatus.BAD_REQUEST,
       );
     }
 
     if (finance.user.email !== email) {
       throw new HttpException(
-        'Invalid or inexisting finance',
+        FINANCE_ERRORS.INVALID_EXCEPTION,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -120,14 +124,14 @@ export class FinancesService {
 
     if (!finance) {
       throw new HttpException(
-        'Invalid or inexisting finance',
+        FINANCE_ERRORS.INVALID_EXCEPTION,
         HttpStatus.BAD_REQUEST,
       );
     }
 
     if (finance.user.email !== email) {
       throw new HttpException(
-        'Invalid or inexisting finance',
+        FINANCE_ERRORS.INVALID_EXCEPTION,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -154,14 +158,14 @@ export class FinancesService {
 
     if (!finance) {
       throw new HttpException(
-        'Invalid or inexisting finance',
+        FINANCE_ERRORS.INVALID_EXCEPTION,
         HttpStatus.BAD_REQUEST,
       );
     }
 
     if (finance.user.email !== email) {
       throw new HttpException(
-        'Invalid or inexisting finance',
+        FINANCE_ERRORS.INVALID_EXCEPTION,
         HttpStatus.BAD_REQUEST,
       );
     }

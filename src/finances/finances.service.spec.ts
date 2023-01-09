@@ -4,6 +4,7 @@ import { PasswordHashService } from 'src/provider/password-hash/password-hash.se
 import { PrismaService } from 'src/provider/prisma/prisma.service';
 import { UsersService } from 'src/users/users.service';
 import { FinancesService } from './finances.service';
+import { FINANCE_ERRORS } from './finances.constants';
 
 const user = {
   id: 1,
@@ -94,7 +95,7 @@ describe('FinancesService', () => {
           { type: 'expense', value: 2000, description: 'PC' },
           sessionEmail,
         );
-      }).not.toThrow('Insufficient funds');
+      }).not.toThrow(FINANCE_ERRORS.FUNDS_EXCEPTION);
     });
 
     it('should not be able to create a expense when the value is greater than the total balance', () => {
@@ -106,7 +107,7 @@ describe('FinancesService', () => {
 
       expect(async () => {
         await service.create(financeExpenseDto, sessionEmail);
-      }).rejects.toThrow('Insufficient funds');
+      }).rejects.toThrow(FINANCE_ERRORS.FUNDS_EXCEPTION);
     });
   });
 
@@ -116,7 +117,7 @@ describe('FinancesService', () => {
 
       expect(async () => {
         await service.findOne(1, sessionEmail);
-      }).rejects.toThrow('Invalid or inexisting finance');
+      }).rejects.toThrow(FINANCE_ERRORS.INVALID_EXCEPTION);
     });
 
     it('should not be able to get an unassociate finance for an user', () => {
@@ -132,7 +133,7 @@ describe('FinancesService', () => {
 
       expect(async () => {
         await service.findOne(1, sessionEmail);
-      }).rejects.toThrow('Invalid or inexisting finance');
+      }).rejects.toThrow(FINANCE_ERRORS.INVALID_EXCEPTION);
     });
     it('should be able to find one user', async () => {
       const financeWithUser = {

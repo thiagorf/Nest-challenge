@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PasswordHashService } from 'src/provider/password-hash/password-hash.service';
 import { PrismaService } from 'src/provider/prisma/prisma.service';
 import { AuthDto } from './dto/auth.dto';
+import { AUTH_ERRORS } from './auth.constants';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +26,7 @@ export class AuthService {
     });
     if (!user) {
       throw new HttpException(
-        'Invalid or inexisting user',
+        AUTH_ERRORS.INVALID_EXCEPTION,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -42,7 +43,7 @@ export class AuthService {
 
     if (!user) {
       throw new HttpException(
-        'Inexisting email or password',
+        AUTH_ERRORS.CREDENTIALS_EXCEPTION,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -54,7 +55,7 @@ export class AuthService {
 
     if (!isPasswordMatch) {
       throw new HttpException(
-        'Invalid email or password',
+        AUTH_ERRORS.CREDENTIALS_EXCEPTION,
         HttpStatus.BAD_REQUEST,
       );
     }

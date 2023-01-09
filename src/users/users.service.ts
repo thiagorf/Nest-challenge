@@ -3,6 +3,7 @@ import { PasswordHashService } from 'src/provider/password-hash/password-hash.se
 import { PrismaService } from 'src/provider/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { USER_DELETED, USER_ERRORS } from './users.constants';
 
 @Injectable()
 export class UsersService {
@@ -26,7 +27,7 @@ export class UsersService {
 
     if (emailIsAvailable) {
       throw new HttpException(
-        'Email has already been in use.',
+        USER_ERRORS.DUPLICATE_EMAIL_EXCEPTION,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -66,7 +67,7 @@ export class UsersService {
 
     if (!user) {
       throw new HttpException(
-        'Invalid or inexisting user',
+        USER_ERRORS.INVALID_EXCEPTION,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -75,6 +76,7 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
+    //check updated email for uniqueness constraint
     const user = await this.prisma.user.findUnique({
       where: {
         id,
@@ -83,7 +85,7 @@ export class UsersService {
 
     if (!user) {
       throw new HttpException(
-        'Invalid or inexisting user',
+        USER_ERRORS.INVALID_EXCEPTION,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -108,7 +110,7 @@ export class UsersService {
 
     if (!user) {
       throw new HttpException(
-        'Invalid or inexisting user',
+        USER_ERRORS.INVALID_EXCEPTION,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -120,7 +122,7 @@ export class UsersService {
     });
 
     return {
-      msg: 'User deleted',
+      msg: USER_DELETED,
     };
   }
 

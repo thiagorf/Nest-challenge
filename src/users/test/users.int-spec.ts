@@ -4,6 +4,7 @@ import { PasswordHashService } from 'src/provider/password-hash/password-hash.se
 import { PrismaService } from 'src/provider/prisma/prisma.service';
 import { User } from '../entities/user.entity';
 import { UsersService } from '../users.service';
+import { USER_ERRORS } from '../users.constants';
 
 const user = {
   name: 'John',
@@ -42,12 +43,12 @@ describe('users integration test', () => {
     it('should not be able to create an user with duplicate email', () => {
       expect(async () => {
         await service.create(user);
-      }).rejects.toThrow('Email has already been in use.');
+      }).rejects.toThrow(USER_ERRORS.DUPLICATE_EMAIL_EXCEPTION);
     });
     it('should be able to proper hash the password', async () => {
       const passwordHashSpy = jest.spyOn(passwordHash, 'hashPassword');
 
-      const sut = await service.create({
+      await service.create({
         ...user,
         email: 'anotheremail@gmail.com',
       });
@@ -66,7 +67,7 @@ describe('users integration test', () => {
     it('should throw a error', () => {
       expect(async () => {
         await service.findOne(999);
-      }).rejects.toThrow('Invalid or inexisting user');
+      }).rejects.toThrow(USER_ERRORS.INVALID_EXCEPTION);
     });
   });
 
@@ -93,7 +94,7 @@ describe('users integration test', () => {
           ...user,
           email: 'updated@gmail.com',
         });
-      }).rejects.toThrow('Invalid or inexisting user');
+      }).rejects.toThrow(USER_ERRORS.INVALID_EXCEPTION);
     });
   });
   describe('delete user', () => {
@@ -107,7 +108,7 @@ describe('users integration test', () => {
     it('should not be able to delete an invalid user', () => {
       expect(async () => {
         await service.remove(9999);
-      }).rejects.toThrow('Invalid or inexisting user');
+      }).rejects.toThrow(USER_ERRORS.INVALID_EXCEPTION);
     });
   });
 });

@@ -3,6 +3,7 @@ import { User } from '@prisma/client';
 import { PasswordHashService } from 'src/provider/password-hash/password-hash.service';
 import { PrismaService } from 'src/provider/prisma/prisma.service';
 import { AuthService } from './auth.service';
+import { AUTH_ERRORS } from './auth.constants';
 
 const sessionEmail = 'john@gmail.com';
 
@@ -59,7 +60,7 @@ describe('AuthService', () => {
       jest.spyOn(prisma.user, 'findUnique').mockResolvedValueOnce(null);
       expect(async () => {
         await service.whoIAm(sessionEmail);
-      }).rejects.toThrow('Invalid or inexisting user');
+      }).rejects.toThrow(AUTH_ERRORS.INVALID_EXCEPTION);
     });
   });
 
@@ -75,13 +76,13 @@ describe('AuthService', () => {
       jest.spyOn(prisma.user, 'findUnique').mockResolvedValueOnce(null);
       expect(async () => {
         await service.singIn(oneUser);
-      }).rejects.toThrow('Inexisting email or password');
+      }).rejects.toThrow(AUTH_ERRORS.CREDENTIALS_EXCEPTION);
     });
     it('should not be able to sign in a valid user with a mismatch password', () => {
       jest.spyOn(passwordHash, 'comparePassword').mockResolvedValueOnce(false);
       expect(async () => {
         await service.singIn(oneUser);
-      }).rejects.toThrow('Invalid email or password');
+      }).rejects.toThrow(AUTH_ERRORS.CREDENTIALS_EXCEPTION);
     });
   });
 });

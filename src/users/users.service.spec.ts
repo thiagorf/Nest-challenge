@@ -3,6 +3,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { PasswordHashService } from 'src/provider/password-hash/password-hash.service';
 import { PrismaService } from 'src/provider/prisma/prisma.service';
 import { UsersService } from './users.service';
+import { USER_ERRORS } from './users.constants';
 
 const oneUser = {
   id: 1,
@@ -85,7 +86,7 @@ describe('UsersService', () => {
       jest.spyOn(prisma.user, 'findUnique').mockResolvedValueOnce(oneUser);
       expect(async () => {
         await service.create(oneUser);
-      }).rejects.toThrow('Email has already been in use.');
+      }).rejects.toThrow(USER_ERRORS.DUPLICATE_EMAIL_EXCEPTION);
     });
 
     it('should hash the user password', async () => {
