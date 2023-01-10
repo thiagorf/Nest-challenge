@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   redis:
+    container_name: redis
     image: redis:6.2-alpine
     ports:
       - 6379:6379
@@ -13,6 +14,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
   api:
+    container_name: api
     build:
       context: .
     depends_on:

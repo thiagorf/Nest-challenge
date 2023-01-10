@@ -74,6 +74,8 @@ unit test: `yarn test:watch`
 
 integration test: `yarn test:int`
 
+end to end test: `yarn test:end`
+
 ## Test Coverage
 
 > needs Docker
