@@ -46,6 +46,8 @@ describe('Users endpoint (e2e)', () => {
   });
 
   afterAll(async () => {
+    await prisma.finance.deleteMany();
+    await prisma.user.deleteMany();
     await app.close();
   });
 

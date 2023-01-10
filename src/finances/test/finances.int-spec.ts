@@ -50,6 +50,11 @@ describe('Finances integration tests', () => {
     userId = user.id;
   });
 
+  afterAll(async () => {
+    await prisma.finance.deleteMany();
+    await prisma.user.deleteMany();
+  });
+
   describe('create finance', () => {
     it('should be able to create a finance', async () => {
       const sut = await service.create(

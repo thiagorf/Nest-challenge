@@ -51,7 +51,9 @@ describe('AuthGuard', () => {
       session: null,
     });
 
-    expect(guard.canActivate(ctx)).resolves.toBeFalsy();
+    expect(async () => await guard.canActivate(ctx)).rejects.toThrow(
+      AUTH_ERRORS.UNAUTHORIZED_EXCEPTION,
+    );
   });
 
   it('should not be able to proceed with an invalid user', async () => {

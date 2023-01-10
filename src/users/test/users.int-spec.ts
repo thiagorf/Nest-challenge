@@ -32,6 +32,11 @@ describe('users integration test', () => {
     await prisma.user.deleteMany();
   });
 
+  afterAll(async () => {
+    await prisma.finance.deleteMany();
+    await prisma.user.deleteMany();
+  });
+
   describe('create user', () => {
     it('should be able to create an user', async () => {
       const sut = await service.create(user);
