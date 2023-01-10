@@ -26,6 +26,25 @@ import { Userbalance } from './entities/user-balance.entity';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(AuthGuard)
+  @Get('balance')
+  @ApiCookieAuth()
+  @ApiResponse({
+    status: 200,
+    type: Userbalance,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid or inexisting user',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'You need to log in first to have access to this resource',
+  })
+  getBalance(@GetSession() session: Session) {
+    return this.usersService.getBalance(session.user.email);
+  }
+
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
@@ -77,27 +96,11 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiResponse({
-    status: 204,
+    status: 200,
     description: 'User deleted',
   })
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
-  }
-
-  @UseGuards(AuthGuard)
-  @Get('balance')
-  @ApiCookieAuth()
-  @ApiResponse({
-    status: 200,
-    type: Userbalance,
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid or inexisting user',
-  })
-  getBalance(@GetSession() session: Session) {
-    return this.usersService.getBalance(session.user.email);
   }
 }

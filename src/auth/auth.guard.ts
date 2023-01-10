@@ -1,6 +1,13 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { AuthService } from './auth.service';
+import { AUTH_ERRORS } from './auth.constants';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -16,6 +23,10 @@ export class AuthGuard implements CanActivate {
       return !!user;
     }
 
-    return false;
+    throw new HttpException(
+      AUTH_ERRORS.UNAUTHORIZED_EXCEPTION,
+      HttpStatus.UNAUTHORIZED,
+    );
+    //return false;
   }
 }

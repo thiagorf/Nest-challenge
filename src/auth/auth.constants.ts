@@ -6,4 +6,6 @@
 export const AUTH_ERRORS = {
   INVALID_EXCEPTION: 'Invalid or inexisting user',
   CREDENTIALS_EXCEPTION: 'Inexisting email or password',
+  UNAUTHORIZED_EXCEPTION:
+    'You need to log in first to have access to this resource',
 };
