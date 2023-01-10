@@ -64,6 +64,5 @@ export class AuthService {
     const userInformation = { id, name, userEmail };
 
     return userInformation;
-    //generate jwt
   }
 }

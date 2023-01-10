@@ -5,6 +5,7 @@ import { PrismaService } from 'src/provider/prisma/prisma.service';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
+import { AUTH_ERRORS } from './auth.constants';
 
 const oneUser = {
   id: 1,
@@ -17,7 +18,7 @@ const auth = {
   whoIAm: jest
     .fn()
     .mockRejectedValue(
-      new HttpException('Invalid or inexisting user', HttpStatus.BAD_REQUEST),
+      new HttpException(AUTH_ERRORS.INVALID_EXCEPTION, HttpStatus.BAD_REQUEST),
     ),
 };
 
@@ -65,7 +66,7 @@ describe('AuthGuard', () => {
     });
 
     expect(async () => await guard.canActivate(ctx)).rejects.toThrow(
-      'Invalid or inexisting user',
+      AUTH_ERRORS.INVALID_EXCEPTION,
     );
   });
 

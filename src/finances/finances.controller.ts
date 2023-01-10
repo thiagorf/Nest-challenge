@@ -19,6 +19,7 @@ import { FilterQuery } from './finances.query';
 import { ApiCookieAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Finance } from './entities/finance.entity';
 import { PaginatedFinances } from './entities/paginated-finance.entity';
+import { FINANCE_ERRORS } from './finances.constants';
 
 @ApiTags('finances')
 @ApiCookieAuth()
@@ -35,7 +36,7 @@ export class FinancesController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Insufficient funds.',
+    description: FINANCE_ERRORS.FUNDS_EXCEPTION,
   })
   async create(
     @Body() createFinanceDto: CreateFinanceDto,
@@ -84,7 +85,7 @@ export class FinancesController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Invalid or inexisting finance',
+    description: FINANCE_ERRORS.INVALID_EXCEPTION,
   })
   async findOne(@Param('id') id: string, @GetSession() session: Session) {
     return await this.financesService.findOne(+id, session.user.email);
@@ -97,7 +98,7 @@ export class FinancesController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Invalid or inexisting finance',
+    description: FINANCE_ERRORS.INVALID_EXCEPTION,
   })
   async update(
     @Param('id') id: string,
@@ -119,7 +120,7 @@ export class FinancesController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Invalid or inexisting finance',
+    description: FINANCE_ERRORS.INVALID_EXCEPTION,
   })
   async remove(@Param('id') id: string, @GetSession() session: Session) {
     await this.financesService.remove(+id, session.user.email);

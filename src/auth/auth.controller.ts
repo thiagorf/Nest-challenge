@@ -13,6 +13,7 @@ import { Session } from 'express-session';
 import { User } from 'src/users/entities/user.entity';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
+import { AUTH_ERRORS } from './auth.constants';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -27,15 +28,15 @@ export class AuthController {
   })
   @ApiResponse({
     status: 401,
-    description: 'Not authenticated',
+    description: AUTH_ERRORS.UNAUTHORIZED_EXCEPTION,
   })
   @ApiResponse({
     status: 400,
-    description: 'Invalid or inexisting user',
+    description: AUTH_ERRORS.INVALID_EXCEPTION,
   })
   async me(@GetSession() session: Session) {
     if (!session.user) {
-      throw new UnauthorizedException('Not authenticated');
+      throw new UnauthorizedException(AUTH_ERRORS.UNAUTHORIZED_EXCEPTION);
     }
 
     return await this.authService.whoIAm(session.user.email);
@@ -48,7 +49,7 @@ export class AuthController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Inexisting email or password',
+    description: AUTH_ERRORS.CREDENTIALS_EXCEPTION,
   })
   async login(@Body() loginDto: AuthDto, @GetSession() session: Session) {
     const userData = await this.authService.singIn(loginDto);

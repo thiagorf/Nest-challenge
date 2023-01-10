@@ -5,6 +5,7 @@ import {
   NestMiddleware,
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
+import { AUTH_ERRORS } from 'src/auth/auth.constants';
 import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
@@ -18,7 +19,7 @@ export class CheckAuthCookieMiddleware implements NestMiddleware {
       }
     }
     throw new HttpException(
-      'you have to logged in to access this resource',
+      AUTH_ERRORS.UNAUTHORIZED_EXCEPTION,
       HttpStatus.UNAUTHORIZED,
     );
   }
